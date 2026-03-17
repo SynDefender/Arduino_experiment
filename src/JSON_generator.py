@@ -3,14 +3,10 @@ from copy import deepcopy
 from pathlib import Path
 import json
 import pickle
-from dataclasses import dataclass
+import models
+import config
 
-@dataclass
-class Event_for_main:
-    event_number:int
-    event_contain:list
-    event_time:float
-    checked:bool=False
+
 
 
 rgb_lamp = {"seq":{"color":"", "ons":[], "dur":[]}}
@@ -29,8 +25,6 @@ curr_lamp_dict =  ["LLvf", "LRvf", "RLvf", "RRvf"]
 N = 12
 DUR = 250
 PAUSE = 1500
-JSON_FILE = Path("C:/Users/ddzhalag/Projects/JSON serial/sequence.json")
-PKL_FILE = Path('C:/Users/ddzhalag/Projects/JSON serial/events_for_main.pkl')
 start_onset = 1000
 
 
@@ -61,7 +55,7 @@ for number, event in enumerate(events_for_JSON):
             eval(curr_dict)["seq"]["ons"].append(start_onset)
             eval(curr_dict)["seq"]["dur"].append(DUR)
 
-    events_for_main.append(Event_for_main(number, event, start_onset))
+    events_for_main.append(models.Event_for_main(number, event, start_onset))
     start_onset += PAUSE
 
 
@@ -84,10 +78,11 @@ experiment_duration = start_onset
 struct["parameters"]["Lfix"] = {"seq":{"ons":[1], "dur":[start_onset]}}
 struct["parameters"]["Rfix"] = {"seq":{"ons":[1], "dur":[start_onset]}}
 
-with open(JSON_FILE, "w") as f:
+events_for_main.append(experiment_duration)
+with open(config.JSON_FILE, "w") as f:
     json.dump(struct, f)
 
-with open(PKL_FILE, 'wb') as f:
+with open(config.PKL_FILE, 'wb') as f:
     pickle.dump(events_for_main, f)
 
 
