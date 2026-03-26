@@ -1,19 +1,17 @@
 import json
 import time
 import serial
-from pathlib import Path
+import config
 
-PORT = "COM5"
-BAUDRATE = 9600
-JSON_FILE = Path("C:/Users/ddzhalag/Projects/JSON serial/sequence.json")
+
 
 def main():
-    with open(JSON_FILE, "r", encoding="utf-8") as f:
+    with open(config.JSON_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     message = json.dumps(data, separators=(",", ":")) + "\n"
 
-    ser = serial.Serial(PORT, BAUDRATE, timeout=1)
+    ser = serial.Serial(config.PORT, config.BAUDRATE, timeout=1)
     time.sleep(2)
 
     ser.write(message.encode("utf-8"))
@@ -31,3 +29,7 @@ def main():
     ser.close()
 if __name__ == "__main__":
     main()
+
+    
+
+    
